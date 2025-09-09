@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Settings as SettingsIcon, User, Bell, Shield, Palette, Camera, Save } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Settings = () => {
   const { user } = useAuth();
+  const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('profile');
   const [settings, setSettings] = useState({
     profile: {
@@ -15,9 +17,7 @@ const Settings = () => {
       smsNotifications: false
     },
     appearance: {
-      theme: 'light',
-      language: 'en',
-      fontSize: 'medium'
+      theme: 'light'
     },
     privacy: {
       faceRecognition: true,
@@ -218,44 +218,15 @@ const Settings = () => {
                         Theme
                       </label>
                       <select
-                        value={settings.appearance.theme}
-                        onChange={(e) => handleSettingChange('appearance', 'theme', e.target.value)}
+                        value={theme}
+                        onChange={(e) => {
+                          setTheme(e.target.value);
+                          handleSettingChange('appearance', 'theme', e.target.value);
+                        }}
                         className="input-field"
                       >
                         <option value="light">Light</option>
                         <option value="dark">Dark</option>
-                        <option value="auto">Auto</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Language
-                      </label>
-                      <select
-                        value={settings.appearance.language}
-                        onChange={(e) => handleSettingChange('appearance', 'language', e.target.value)}
-                        className="input-field"
-                      >
-                        <option value="en">English</option>
-                        <option value="es">Spanish</option>
-                        <option value="fr">French</option>
-                        <option value="de">German</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Font Size
-                      </label>
-                      <select
-                        value={settings.appearance.fontSize}
-                        onChange={(e) => handleSettingChange('appearance', 'fontSize', e.target.value)}
-                        className="input-field"
-                      >
-                        <option value="small">Small</option>
-                        <option value="medium">Medium</option>
-                        <option value="large">Large</option>
                       </select>
                     </div>
                   </div>

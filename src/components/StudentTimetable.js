@@ -13,13 +13,13 @@ const StudentTimetable = () => {
   const getClassTypeColor = (type) => {
     switch (type) {
       case 'lecture':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'lecture';
       case 'practical':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'lecture';
       case 'tutorial':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
+        return 'tutorial';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'lecture';
     }
   };
 
@@ -39,15 +39,15 @@ const StudentTimetable = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="card">
+      <div className="card dashboard-card">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-purple-600" />
+            <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+              <Calendar className="w-5 h-5 text-primary-600" />
             </div>
             <div className="ml-3">
-              <h1 className="text-2xl font-bold text-gray-900">Weekly Timetable</h1>
-              <p className="text-gray-600">View your class schedule for the week</p>
+              <h1 className="heading text-2xl font-bold">Weekly Timetable</h1>
+              <p className="text-time">View your class schedule for the week</p>
             </div>
           </div>
         </div>

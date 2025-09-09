@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { User, GraduationCap, Eye, EyeOff } from 'lucide-react';
 
-const Login = () => {
+const Login = ({ onSignupClick }) => {
   const [formData, setFormData] = useState({
-    email: '',
+    enrollment: '', // For students
+    email: '',      // For faculty
     password: '',
     role: 'student'
   });
@@ -31,19 +33,34 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      const userData = {
-        id: formData.role === 'student' ? 'STU001' : 'FAC001',
-        name: formData.role === 'student' ? 'Alice Johnson' : 'Dr. Smith',
-        email: formData.email,
-        role: formData.role,
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.role === 'student' ? 'Alice Johnson' : 'Dr. Smith')}&background=3b82f6&color=fff`
-      };
-      
+    try {
+      // Simulate API call
+      const userData = formData.role === 'student' 
+        ? {
+            id: formData.enrollment || 'STU001',
+            name: 'Alice Johnson',
+            enrollment: formData.enrollment,
+            role: 'student',
+            avatar: `https://ui-avatars.com/api/?name=Alice+Johnson&background=3b82f6&color=fff`
+          }
+        : {
+            id: 'FAC001',
+            name: 'Dr. Smith',
+            email: formData.email,
+            role: 'faculty',
+            avatar: `https://ui-avatars.com/api/?name=Dr+Smith&background=3b82f6&color=fff`
+          };
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
       login(userData);
+      
+      // Navigate to home after successful login
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Login failed:', error);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -96,22 +113,43 @@ const Login = () => {
               </div>
             </div>
 
-            {/* Email Input */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="input-field"
-                placeholder="Enter your email"
-                required
-              />
-            </div>
+            {/* Enrollment or Email Input */}
+            {formData.role === 'student' ? (
+              <div>
+                <label htmlFor="enrollment" className="block text-sm font-medium text-gray-700 mb-2">
+                  Enrollment Number
+                </label>
+                <input
+                  type="text"
+                  id="enrollment"
+                  name="enrollment"
+                  value={formData.enrollment}
+                  onChange={handleInputChange}
+                  pattern='^[0-9]{12}$'
+                  onInvalid={e => e.target.setCustomValidity('Enrollment number must be exactly 12 digits.')}
+                  onInput={e => e.target.setCustomValidity('')}
+                  className="input-field"
+                  placeholder="Enter your enrollment number"
+                  required
+                />
+              </div>
+            ) : (
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="input-field"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+            )}
 
             {/* Password Input */}
             <div>
@@ -125,6 +163,8 @@ const Login = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
+                  minLength={6}
+                  maxLength={15}
                   className="input-field pr-10"
                   placeholder="Enter your password"
                   required
@@ -161,8 +201,14 @@ const Login = () => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 mb-2">
               Demo credentials: Use any email and password
+            </p>
+            <p className="text-sm text-gray-600">
+              Don't have an account?{' '}
+              <Link to="/signup" className="text-primary-600 font-medium underline">
+                Sign Up
+              </Link>
             </p>
           </div>
         </div>
