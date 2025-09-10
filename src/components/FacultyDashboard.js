@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import FaceRecognition from './FaceRecognition';
 import { Users, CheckCircle, XCircle, Clock, TrendingUp, Download } from 'lucide-react';
 import studentsData from '../data/students.json';
 import attendanceData from '../data/attendance.json';
 
 const FacultyDashboard = () => {
+  const [showFaceModal, setShowFaceModal] = useState(false);
+  const [attendanceSuccess, setAttendanceSuccess] = useState(false);
+
+  const handleAttendanceMarked = () => {
+    setAttendanceSuccess(true);
+    setShowFaceModal(false);
+    setTimeout(() => setAttendanceSuccess(false), 3000);
+  };
+
   const [currentTime, setCurrentTime] = useState(new Date());
   const [todayAttendance, setTodayAttendance] = useState([]);
   const [attendanceStats, setAttendanceStats] = useState({
@@ -18,14 +28,12 @@ const FacultyDashboard = () => {
       setCurrentTime(new Date());
     }, 1000);
 
-    // Calculate today's attendance
     const todayClasses = attendanceData.today.classes;
     const allStudents = studentsData;
-    
-    // Get unique students who attended today
+
     const presentStudents = new Set();
     const absentStudents = new Set();
-    
+
     todayClasses.forEach(cls => {
       cls.students.forEach(student => {
         if (student.present) {
@@ -36,7 +44,6 @@ const FacultyDashboard = () => {
       });
     });
 
-    // Calculate average attendance percentage
     const totalAttendance = allStudents.reduce((sum, student) => sum + student.attendance.percentage, 0);
     const averageAttendance = totalAttendance / allStudents.length;
 
@@ -79,17 +86,8 @@ const FacultyDashboard = () => {
         student.attendance.absent,
         student.attendance.percentage
       ])
-    ].map(row => row.join(',')).join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `attendance_report_${new Date().toISOString().split('T')[0]}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
+    ];
+    // TODO: Add logic for CSV export
   };
 
   return (
@@ -119,53 +117,35 @@ const FacultyDashboard = () => {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="card">
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6 text-blue-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-2xl font-bold text-gray-900">{attendanceStats.totalStudents}</p>
-              <p className="text-sm text-gray-600">Total Students</p>
-            </div>
+      {/* Attendance Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="card flex items-center">
+          <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+            <CheckCircle className="w-6 h-6 text-green-600" />
+          </div>
+          <div className="ml-4">
+            <p className="text-2xl font-bold text-gray-900">{attendanceStats.presentToday}</p>
+            <p className="text-sm text-gray-600">Present Today</p>
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <CheckCircle className="w-6 h-6 text-green-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-2xl font-bold text-gray-900">{attendanceStats.presentToday}</p>
-              <p className="text-sm text-gray-600">Present Today</p>
-            </div>
+        <div className="card flex items-center">
+          <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+            <XCircle className="w-6 h-6 text-red-600" />
+          </div>
+          <div className="ml-4">
+            <p className="text-2xl font-bold text-gray-900">{attendanceStats.absentToday}</p>
+            <p className="text-sm text-gray-600">Absent Today</p>
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-              <XCircle className="w-6 h-6 text-red-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-2xl font-bold text-gray-900">{attendanceStats.absentToday}</p>
-              <p className="text-sm text-gray-600">Absent Today</p>
-            </div>
+        <div className="card flex items-center">
+          <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+            <TrendingUp className="w-6 h-6 text-purple-600" />
           </div>
-        </div>
-
-        <div className="card">
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-purple-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-2xl font-bold text-gray-900">{attendanceStats.averageAttendance}%</p>
-              <p className="text-sm text-gray-600">Avg Attendance</p>
-            </div>
+          <div className="ml-4">
+            <p className="text-2xl font-bold text-gray-900">{attendanceStats.averageAttendance}%</p>
+            <p className="text-sm text-gray-600">Avg Attendance</p>
           </div>
         </div>
       </div>
@@ -236,12 +216,12 @@ const FacultyDashboard = () => {
         </div>
       </div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions + Attendance Trends */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
           <div className="space-y-3">
-            <button className="w-full btn-primary flex items-center justify-center">
+            <button onClick={() => setShowFaceModal(true)} className="w-full btn-primary flex items-center justify-center">
               <Users className="w-4 h-4 mr-2" />
               Mark Attendance
             </button>
@@ -266,7 +246,7 @@ const FacultyDashboard = () => {
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-green-500 h-2 rounded-full" style={{ width: '87.5%' }}></div>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Last Week</span>
               <span className="text-sm font-medium text-gray-900">92.1%</span>
@@ -274,7 +254,7 @@ const FacultyDashboard = () => {
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-blue-500 h-2 rounded-full" style={{ width: '92.1%' }}></div>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">This Month</span>
               <span className="text-sm font-medium text-gray-900">89.3%</span>
@@ -285,6 +265,26 @@ const FacultyDashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* FaceRecognition Modal */}
+      {showFaceModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 relative">
+            <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={() => setShowFaceModal(false)}>
+              &times;
+            </button>
+            <h2 className="text-lg font-semibold mb-4">Face Recognition Attendance</h2>
+            <FaceRecognition onAttendanceMarked={handleAttendanceMarked} />
+          </div>
+        </div>
+      )}
+
+      {attendanceSuccess && (
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 bg-green-50 border border-green-200 rounded-lg px-6 py-3 flex items-center shadow-lg z-50">
+          <CheckCircle className="w-6 h-6 text-green-600 mr-2" />
+          <span className="text-green-800 font-medium">Attendance marked successfully!</span>
+        </div>
+      )}
     </div>
   );
 };

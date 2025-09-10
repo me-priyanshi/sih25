@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Target, Clock, BookOpen, CheckCircle, AlertCircle, Plus, Filter } from 'lucide-react';
 import tasksData from '../data/tasks.json';
 
@@ -7,17 +7,33 @@ const StudentTasks = () => {
   const [selectedPriority, setSelectedPriority] = useState('all');
   const [completedTasks, setCompletedTasks] = useState(new Set());
 
-  const allTasks = [...tasksData.academic, ...tasksData.personal];
-
-  const filteredTasks = allTasks.filter(task => {
-    const categoryMatch = selectedCategory === 'all' || 
-      (selectedCategory === 'academic' && tasksData.academic.includes(task)) ||
-      (selectedCategory === 'personal' && tasksData.personal.includes(task));
-    
-    const priorityMatch = selectedPriority === 'all' || task.priority === selectedPriority;
-    
-    return categoryMatch && priorityMatch;
+  const [academicTasks, setAcademicTasks] = useState([...tasksData.academic]);
+  const [personalTasks, setPersonalTasks] = useState([...tasksData.personal]);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newTask, setNewTask] = useState({
+    title: '',
+    description: '',
+    priority: 'medium',
+    estimatedTime: '',
+    category: 'academic',
   });
+
+  // ✅ allTasks defined before use
+  const allTasks = [...academicTasks, ...personalTasks];
+
+  const filteredTasks = useMemo(() => {
+    return allTasks.filter((task) => {
+      const categoryMatch =
+        selectedCategory === 'all' ||
+        (selectedCategory === 'academic' && academicTasks.includes(task)) ||
+        (selectedCategory === 'personal' && personalTasks.includes(task));
+
+      const priorityMatch =
+        selectedPriority === 'all' || task.priority === selectedPriority;
+
+      return categoryMatch && priorityMatch;
+    });
+  }, [allTasks, selectedCategory, selectedPriority, academicTasks, personalTasks]);
 
   const toggleTaskCompletion = (taskId) => {
     const newCompleted = new Set(completedTasks);
@@ -58,7 +74,27 @@ const StudentTasks = () => {
 
   const completedCount = completedTasks.size;
   const totalCount = allTasks.length;
-  const progressPercentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+  const progressPercentage =
+    totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+
+  const handleAddTask = (e) => {
+    e.preventDefault();
+    const id = Date.now();
+    const task = { ...newTask, id };
+    if (newTask.category === 'academic') {
+      setAcademicTasks([...academicTasks, task]);
+    } else {
+      setPersonalTasks([...personalTasks, task]);
+    }
+    setShowAddForm(false);
+    setNewTask({
+      title: '',
+      description: '',
+      priority: 'medium',
+      estimatedTime: '',
+      category: 'academic',
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -74,10 +110,51 @@ const StudentTasks = () => {
               <p className="text-gray-600">Manage your academic and personal tasks</p>
             </div>
           </div>
-          <button className="btn-primary flex items-center">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Task
-          </button>
+          {/* Removed blue Add Task button */}
+          {showAddForm && (
+            <form className="mt-4 p-4 bg-gray-50 rounded-lg border" onSubmit={handleAddTask} style={{minWidth:'300px'}}>
+              <div className="mb-2">
+                <label className="block text-sm font-medium text-gray-700">Title</label>
+                <input type="text" className="input-field w-full" required value={newTask.title} onChange={e => setNewTask({...newTask, title: e.target.value})} />
+              </div>
+              <div className="mb-2">
+                <label className="block text-sm font-medium text-gray-700">Description</label>
+                <input type="text" className="input-field w-full" required value={newTask.description} onChange={e => setNewTask({...newTask, description: e.target.value})} />
+              </div>
+              <div className="mb-2">
+                <label className="block text-sm font-medium text-gray-700">Estimated Time</label>
+                <input type="text" className="input-field w-full" required value={newTask.estimatedTime} onChange={e => setNewTask({...newTask, estimatedTime: e.target.value})} />
+              </div>
+              <div className="mb-2">
+                <label className="block text-sm font-medium text-gray-700">Priority</label>
+                <select className="input-field w-full" value={newTask.priority} onChange={e => setNewTask({...newTask, priority: e.target.value})}>
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </div>
+              <div className="mb-2">
+                <label className="block text-sm font-medium text-gray-700">Category</label>
+                <select className="input-field w-full" value={newTask.category} onChange={e => setNewTask({...newTask, category: e.target.value})}>
+                  <option value="academic">Academic</option>
+                  <option value="personal">Personal</option>
+                </select>
+              </div>
+              <div className="flex gap-2 mt-2">
+                <button type="submit" className="btn-primary">Add</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowAddForm(false)}>Cancel</button>
+              </div>
+            </form>
+          )}
+          {!showAddForm && (
+            <button
+              className="ml-4 px-4 py-2 rounded-lg bg-indigo-600 text-white font-semibold shadow hover:bg-indigo-700 border border-indigo-600 flex items-center gap-2"
+              onClick={() => setShowAddForm(true)}
+            >
+              <Plus className="w-4 h-4 mr-1 text-white" />
+              New Task
+            </button>
+          )}
         </div>
       </div>
 
@@ -101,7 +178,9 @@ const StudentTasks = () => {
               <Target className="w-6 h-6 text-blue-600" />
             </div>
             <div className="ml-4">
-              <p className="text-2xl font-bold text-gray-900">{totalCount - completedCount}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {totalCount - completedCount}
+              </p>
               <p className="text-sm text-gray-600">Remaining</p>
             </div>
           </div>
@@ -113,7 +192,9 @@ const StudentTasks = () => {
               <AlertCircle className="w-6 h-6 text-purple-600" />
             </div>
             <div className="ml-4">
-              <p className="text-2xl font-bold text-gray-900">{progressPercentage}%</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {progressPercentage}%
+              </p>
               <p className="text-sm text-gray-600">Progress</p>
             </div>
           </div>
@@ -122,9 +203,11 @@ const StudentTasks = () => {
 
       {/* Progress Bar */}
       <div className="card">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Overall Progress</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Overall Progress
+        </h3>
         <div className="w-full bg-gray-200 rounded-full h-3">
-          <div 
+          <div
             className="bg-gradient-to-r from-primary-500 to-primary-600 h-3 rounded-full transition-all duration-500"
             style={{ width: `${progressPercentage}%` }}
           ></div>
@@ -142,7 +225,9 @@ const StudentTasks = () => {
         </div>
         <div className="flex flex-wrap gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Category
+            </label>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
@@ -154,7 +239,9 @@ const StudentTasks = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Priority
+            </label>
             <select
               value={selectedPriority}
               onChange={(e) => setSelectedPriority(e.target.value)}
@@ -175,8 +262,8 @@ const StudentTasks = () => {
           <div
             key={task.id}
             className={`card transition-all duration-200 ${
-              completedTasks.has(task.id) 
-                ? 'bg-green-50 border-green-200' 
+              completedTasks.has(task.id)
+                ? 'bg-green-50 border-green-200'
                 : 'bg-white border-gray-200 hover:border-gray-300'
             }`}
           >
@@ -197,35 +284,49 @@ const StudentTasks = () => {
               <div className="flex-1">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h3 className={`font-medium ${
-                      completedTasks.has(task.id) 
-                        ? 'text-green-800 line-through' 
-                        : 'text-gray-900'
-                    }`}>
+                    <h3
+                      className={`font-medium ${
+                        completedTasks.has(task.id)
+                          ? 'text-green-800 line-through'
+                          : 'text-gray-900'
+                      }`}
+                    >
                       {task.title}
                     </h3>
-                    <p className={`text-sm mt-1 ${
-                      completedTasks.has(task.id) 
-                        ? 'text-green-600' 
-                        : 'text-gray-600'
-                    }`}>
+                    <p
+                      className={`text-sm mt-1 ${
+                        completedTasks.has(task.id)
+                          ? 'text-green-600'
+                          : 'text-gray-600'
+                      }`}
+                    >
                       {task.description}
                     </p>
-                    
+
                     <div className="flex items-center mt-3 space-x-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getCategoryColor(task)}`}>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium border ${getCategoryColor(
+                          task
+                        )}`}
+                      >
                         <div className="flex items-center">
                           {getCategoryIcon(task)}
                           <span className="ml-1">
-                            {tasksData.academic.includes(task) ? 'Academic' : 'Personal'}
+                            {academicTasks.includes(task)
+                              ? 'Academic'
+                              : 'Personal'}
                           </span>
                         </div>
                       </span>
-                      
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getPriorityColor(task.priority)}`}>
+
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium border ${getPriorityColor(
+                          task.priority
+                        )}`}
+                      >
                         {task.priority} priority
                       </span>
-                      
+
                       <div className="flex items-center text-xs text-gray-500">
                         <Clock className="w-3 h-3 mr-1" />
                         {task.estimatedTime}
@@ -242,7 +343,9 @@ const StudentTasks = () => {
       {filteredTasks.length === 0 && (
         <div className="card text-center py-12">
           <Target className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No Tasks Found</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No Tasks Found
+          </h3>
           <p className="text-gray-600">
             Try adjusting your filters or add new tasks to get started.
           </p>

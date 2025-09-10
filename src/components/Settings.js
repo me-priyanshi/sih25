@@ -141,9 +141,6 @@ const Settings = () => {
                     <button className="btn-secondary w-full md:w-auto">
                       Change Password
                     </button>
-                    <button className="btn-secondary w-full md:w-auto ml-0 md:ml-2">
-                      Two-Factor Authentication
-                    </button>
                   </div>
                 </div>
               </div>
