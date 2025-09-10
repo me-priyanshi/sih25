@@ -204,13 +204,13 @@ table {
   color: var(--text-primary);
 }
 
-th {
+/* th {
   background-color: var(--bg-tertiary);
-}
+} */
 
-tr:nth-child(even) {
+/* tr:nth-child(even) {
   background-color: var(--bg-tertiary);
-}
+} */
 
 /* Scrollbars */
 ::-webkit-scrollbar {

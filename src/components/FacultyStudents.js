@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Users, Search, Filter, Download, Mail, Phone, TrendingUp, TrendingDown } from 'lucide-react';
 import studentsData from '../data/students.json';
+import { useTheme } from '../contexts/ThemeContext';
 
 const FacultyStudents = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
   const [filterBy, setFilterBy] = useState('all');
+  const { theme } = useTheme();
 
   const filteredAndSortedStudents = studentsData
     .filter(student => {
@@ -188,35 +190,48 @@ const FacultyStudents = () => {
         </div>
       </div>
 
+      {/* Show Total Students */}
+      <div className="text-center ">
+        <h3 className={`rounded-full p-2 text-lg font-lg text-gray-900 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'}`}>
+          Total : {filteredAndSortedStudents.length} {filteredAndSortedStudents.length <= 1 ? `Student` : `Students`}
+        </h3>
+      </div>
+
       {/* Students Table */}
       <div className="card">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className={`${theme === 'dark' ? 'bg-black' : 'bg-gray-200'}`}>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-white-500' : 'text-gray-500'}`}>
+                  Sr. No.
+                </th>
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-white-500' : 'text-gray-500'}`}>
                   Student
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-white-500' : 'text-gray-500'}`}>
                   Contact
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-white-500' : 'text-gray-500'}`}>
                   Attendance
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-white-500' : 'text-gray-500'}`}>
                   Classes
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-white-500' : 'text-gray-500'}`}>
                   Subjects
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-white-500' : 'text-gray-500'}`}>  
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className={`${theme === 'dark' ? 'bg-gray-800 divide-y divide-gray-200' : 'bg-white divide-y divide-gray-200'}`}>
               {filteredAndSortedStudents.map((student) => (
-                <tr key={student.id} className="hover:bg-gray-50">
+                <tr key={student.id} className={`${theme === 'dark' ? 'bg-gray-800 hover:bg-black' : 'bg-white hover:bg-gray-100'}`}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {filteredAndSortedStudents.indexOf(student) + 1}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
@@ -309,12 +324,12 @@ const FacultyStudents = () => {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="card text-center">
           <div className="text-2xl font-bold text-gray-900">{filteredAndSortedStudents.length}</div>
           <div className="text-sm text-gray-600">Total Students</div>
-        </div>
-        <div className="card text-center">
+        </div> */}
+        {/* <div className="card text-center">
           <div className="text-2xl font-bold text-green-600">
             {filteredAndSortedStudents.filter(s => s.attendance.percentage >= 95).length}
           </div>
@@ -331,10 +346,9 @@ const FacultyStudents = () => {
             {filteredAndSortedStudents.filter(s => s.attendance.percentage < 75).length}
           </div>
           <div className="text-sm text-gray-600">Needs Attention</div>
-        </div>
-      </div>
-    </div>
-  );
-};
+        </div> */}
+      {/* </div> */}
+  </div>
+  )};
 
 export default FacultyStudents;

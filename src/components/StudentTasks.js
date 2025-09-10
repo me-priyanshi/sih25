@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Target, Clock, BookOpen, CheckCircle, AlertCircle, Plus, Filter } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 import tasksData from '../data/tasks.json';
 
 const StudentTasks = () => {
+  const { theme } = useTheme();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedPriority, setSelectedPriority] = useState('all');
   // const [completedTasks, setCompletedTasks] = useState(new Set());
@@ -156,10 +158,10 @@ const StudentTasks = () => {
           {/* Modal */}
           {showAddForm && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-black rounded-lg p-6 w-full max-w-md">
+              <div className={`${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} rounded-lg p-6 w-full max-w-md`}>
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold">Add New Task</h2>
-                  <button onClick={() => setShowAddForm(false)} className="text-gray-500 hover:text-gray-700">
+                  <h2 className={`text-xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Add New Task</h2>
+                  <button onClick={() => setShowAddForm(false)} className={`${theme === 'dark' ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700'}`}>
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -167,19 +169,19 @@ const StudentTasks = () => {
                 </div>
                 <form onSubmit={handleAddTask}>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">Title</label>
+                    <label className={`block text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Title</label>
                     <input type="text" className="input-field w-full" required value={newTask.title} onChange={e => setNewTask({...newTask, title: e.target.value})} />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">Description</label>
+                    <label className={`block text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Description</label>
                     <input type="text" className="input-field w-full" required value={newTask.description} onChange={e => setNewTask({...newTask, description: e.target.value})} />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">Estimated Time</label>
+                    <label className={`block text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Estimated Time</label>
                     <input type="text" className="input-field w-full" required value={newTask.estimatedTime} onChange={e => setNewTask({...newTask, estimatedTime: e.target.value})} />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">Priority</label>
+                    <label className={`block text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Priority</label>
                     <select className="input-field w-full" value={newTask.priority} onChange={e => setNewTask({...newTask, priority: e.target.value})}>
                       <option value="high">High</option>
                       <option value="medium">Medium</option>
@@ -187,7 +189,7 @@ const StudentTasks = () => {
                     </select>
                   </div>
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">Category</label>
+                    <label className={`block text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Category</label>
                     <select className="input-field w-full" value={newTask.category} onChange={e => setNewTask({...newTask, category: e.target.value})}>
                       <option value="academic">Academic</option>
                       <option value="personal">Personal</option>

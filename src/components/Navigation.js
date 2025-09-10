@@ -25,7 +25,7 @@ const UserAvatar = ({ user, theme }) => {
   return (
     <div className="flex items-center">
       <div className="w-10 h-10 rounded-full bg-primary-600 flex items-center justify-center text-white font-medium">
-        {getInitials(user?.name || 'U')}
+        {getInitials(user?.name || 'User')}
       </div>
       <div className="ml-3">
         <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
@@ -92,11 +92,11 @@ const Navigation = ({ activeTab, setActiveTab }) => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className={`hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:border-r lg:border-gray-200 ${
-        theme === 'dark' ? 'lg:bg-gray-800 lg:border-gray-700' : 'lg:bg-white'}`}>
+      <div className={`hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:border-r ${
+        theme === 'dark' ? 'lg:bg-gray-850 lg:border-gray-700' : 'lg:bg-white lg:border-gray-200'}`}>
         <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
           {/* Logo */}
-          <div className="flex items-center flex-shrink-0 px-4 mb-8">
+          <div className="flex items-center flex-shrink-0 px-4 mb-4">
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
               <Calendar className="w-5 h-5 text-white" />
             </div>
@@ -104,22 +104,12 @@ const Navigation = ({ activeTab, setActiveTab }) => {
           </div>
 
           {/* User Info */}
-          <div className="px-4 mb-6">
-            <div className="flex items-center">
-              <img
-                className="w-10 h-10 rounded-full"
-                src={user?.avatar}
-                alt={user?.name}
-              />
-              <div className="ml-3">
-                <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{user?.name}</p>
-                <p className={`text-xs capitalize ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{user?.role}</p>
-              </div>
-            </div>
+          <div className="p-4 border-b border-gray-200">
+            <UserAvatar user={user} theme={theme} />
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 space-y-1">
+          <nav className="flex-1 px-3 space-y-2 p-2">
             {navItems.map((item) => (
               <NavItem key={item.id} item={item} />
             ))}
@@ -129,8 +119,12 @@ const Navigation = ({ activeTab, setActiveTab }) => {
           <div className="px-4 mt-4">
             <button
               onClick={handleLogout}
-              className="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors duration-200"
-            >
+              // className="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors duration-200"
+              className={`w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 
+                ${theme === 'dark' 
+                  ? 'text-red-400 hover:bg-gray-700 hover:text-red-300' 
+                  : 'text-red-600 hover:bg-red-50 hover:text-red-700'
+              }`}>
               <LogOut className="w-5 h-5 mr-3" />
               Logout
             </button>
@@ -145,15 +139,13 @@ const Navigation = ({ activeTab, setActiveTab }) => {
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
               <Calendar className="w-5 h-5 text-white" />
             </div>
-            <span className="ml-2 text-lg font-bold text-gray-900">SmartClass</span>
+            <span className={`ml-2 text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>SmartClass</span>
           </div>
           
           <div className="flex items-center space-x-3">
-            <img
-              className="w-8 h-8 rounded-full"
-              src={user?.avatar}
-              alt={user?.name}
-            />
+            <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white font-medium text-sm">
+              {user?.name ? user.name.split(' ').map(word => word[0]).join('').toUpperCase() : 'U'}
+            </div>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 rounded-lg text-gray-600 hover:bg-gray-100"
@@ -172,7 +164,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-50">
           <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setIsMobileMenuOpen(false)} />
-          <div className={`fixed top-0 right-0 w-64 h-full bg-white shadow-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className={`fixed top-0 right-0 w-64 h-full shadow-lg ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white'}`}> {/*'bg-gray-800' : 'bg-white'}`}>*/}
             <div className="flex flex-col h-full">
               {/* Mobile Menu Header */}
               <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -180,29 +172,23 @@ const Navigation = ({ activeTab, setActiveTab }) => {
                   <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
                     <Calendar className="w-5 h-5 text-white" />
                   </div>
-                  <span className="ml-2 text-lg font-bold text-gray-900">SmartClass</span>
+                  <span className={`ml-2 text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>SmartClass</span>
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+                  className={`p-2 rounded-lg transition-colors duration-200 ${
+                    theme === 'dark' 
+                      ? 'text-gray-400 hover:bg-gray-700 hover:text-gray-200' 
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  }`}
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* User Info */}
-              <div className="p-4 border-b border-gray-200">
-                <div className="flex items-center">
-                  <img
-                    className="w-10 h-10 rounded-full"
-                    src={user?.avatar}
-                    alt={user?.name}
-                  />
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-                    <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
-                  </div>
-                </div>
+              <div className={`p-4 border-b ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}>
+                <UserAvatar user={user} theme={theme} />
               </div>
 
               {/* Mobile Navigation */}
@@ -216,8 +202,12 @@ const Navigation = ({ activeTab, setActiveTab }) => {
               <div className="p-4 border-t border-gray-200">
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors duration-200"
-                >
+                  // className="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors duration-200">
+                  className={`w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                    theme === 'dark' 
+                      ? 'text-red-400 hover:bg-gray-700 hover:text-red-300' 
+                      : 'text-red-600 hover:bg-red-50 hover:text-red-700'
+                  }`}>
                   <LogOut className="w-5 h-5 mr-3" />
                   Logout
                 </button>

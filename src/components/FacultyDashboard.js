@@ -217,7 +217,7 @@ const FacultyDashboard = () => {
       </div>
 
       {/* Quick Actions + Attendance Trends */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="card">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
           <div className="space-y-3">
@@ -264,10 +264,10 @@ const FacultyDashboard = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* FaceRecognition Modal */}
-      {showFaceModal && (
+      {/* {showFaceModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg p-6 relative">
             <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={() => setShowFaceModal(false)}>
@@ -284,7 +284,7 @@ const FacultyDashboard = () => {
           <CheckCircle className="w-6 h-6 text-green-600 mr-2" />
           <span className="text-green-800 font-medium">Attendance marked successfully!</span>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
