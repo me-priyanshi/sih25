@@ -91,71 +91,13 @@ const AppContent = () => {
                         {activeTab === 'attendance' && <FacultyAttendance />}
                         {activeTab === 'students' && <FacultyStudents />}
                         {activeTab === 'settings' && <Settings />}
-                        {activeTab === 'reports' && (
-                          <div className="space-y-6">
-                            <div className="card">
-                              <div className="flex items-center">
-                                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                  <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                                    />
-                                  </svg>
-                                </div>
-                                <div className="ml-3">
-                                  <h1 className="text-2xl font-bold text-gray-900">Reports & Analytics</h1>
-                                  <p className="text-gray-600">Generate detailed attendance reports and analytics</p>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                              <div className="card">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4">Weekly Report</h3>
-                                <p className="text-gray-600 mb-4">Generate attendance report for the current week</p>
-                                <button className="btn-primary w-full">Generate Report</button>
-                              </div>
-                              <div className="card">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4">Monthly Analytics</h3>
-                                <p className="text-gray-600 mb-4">View detailed monthly attendance analytics</p>
-                                <button className="btn-primary w-full">View Analytics</button>
-                              </div>
-                              <div className="card">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4">Student Performance</h3>
-                                <p className="text-gray-600 mb-4">Analyze individual student attendance patterns</p>
-                                <button className="btn-primary w-full">View Performance</button>
-                              </div>
-                            </div>
-                            <div className="card">
-                              <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Reports</h3>
-                              <div className="space-y-3">
-                                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                  <div>
-                                    <h4 className="font-medium text-gray-900">Weekly Attendance Report</h4>
-                                    <p className="text-sm text-gray-600">Generated on Jan 15, 2024</p>
-                                  </div>
-                                  <button className="btn-secondary">Download</button>
-                                </div>
-                                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                  <div>
-                                    <h4 className="font-medium text-gray-900">Monthly Analytics</h4>
-                                    <p className="text-sm text-gray-600">Generated on Jan 1, 2024</p>
-                                  </div>
-                                  <button className="btn-secondary">Download</button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )}
                       </>
                     )}
                   </main>
                 </div>
               </div>
             ) : (
-              <Navigate to="/login" replace />
+              <Navigate to="/login" />
             )
           }
         />

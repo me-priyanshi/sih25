@@ -284,7 +284,10 @@ const FacultyAttendance = () => {
       <div className="card">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="p-4 bg-primary-50 border border-primary-200 rounded-lg hover:bg-primary-100 transition-colors duration-200">
+          <button
+            className="p-4 bg-primary-50 border border-primary-200 rounded-lg hover:bg-primary-100 transition-colors duration-200"
+            onClick={() => alert('Face recognition attendance started!')}
+          >
             <div className="flex items-center">
               <Users className="w-6 h-6 text-primary-600 mr-3" />
               <div className="text-left">
@@ -294,22 +297,15 @@ const FacultyAttendance = () => {
             </div>
           </button>
 
-          <button className="p-4 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors duration-200">
+          <button
+            className="p-4 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors duration-200"
+            onClick={exportClassAttendanceCSV}
+          >
             <div className="flex items-center">
               <Download className="w-6 h-6 text-green-600 mr-3" />
               <div className="text-left">
                 <h4 className="font-medium text-green-900">Export Report</h4>
                 <p className="text-sm text-green-700">Download attendance report</p>
-              </div>
-            </div>
-          </button>
-
-          <button className="p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-            <div className="flex items-center">
-              <Clock className="w-6 h-6 text-blue-600 mr-3" />
-              <div className="text-left">
-                <h4 className="font-medium text-blue-900">View History</h4>
-                <p className="text-sm text-blue-700">Check past attendance records</p>
               </div>
             </div>
           </button>
