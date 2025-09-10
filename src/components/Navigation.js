@@ -11,15 +11,43 @@ import {
   Camera,
   BarChart3
 } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
+
+const UserAvatar = ({ user, theme }) => {
+  const getInitials = (name) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase();
+  };
+
+  return (
+    <div className="flex items-center">
+      <div className="w-10 h-10 rounded-full bg-primary-600 flex items-center justify-center text-white font-medium">
+        {getInitials(user?.name || 'U')}
+      </div>
+      <div className="ml-3">
+        <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+          {user?.name}
+        </p>
+        <p className={`text-xs capitalize ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+          {user?.role}
+        </p>
+      </div>
+    </div>
+  );
+};
 
 const Navigation = ({ activeTab, setActiveTab }) => {
+  const { theme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
 
   const studentNavItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'attendance', label: 'Attendance', icon: Camera },
-    { id: 'timetable', label: 'Timetable', icon: Calendar },
+    // { id: 'timetable', label: 'Timetable', icon: Calendar },
     { id: 'tasks', label: 'Tasks', icon: BarChart3 },
     { id: 'settings', label: 'Settings', icon: Settings }
   ];
@@ -50,7 +78,9 @@ const Navigation = ({ activeTab, setActiveTab }) => {
         className={`w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
           isActive
             ? 'bg-primary-100 text-primary-700'
-            : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+            : theme === 'dark' 
+              ? 'text-gray-300 hover:bg-gray-700 hover:text-white' 
+              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
         }`}
       >
         <Icon className="w-5 h-5 mr-3" />
@@ -62,14 +92,15 @@ const Navigation = ({ activeTab, setActiveTab }) => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:bg-white lg:border-r lg:border-gray-200">
+      <div className={`hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:border-r lg:border-gray-200 ${
+        theme === 'dark' ? 'lg:bg-gray-800 lg:border-gray-700' : 'lg:bg-white'}`}>
         <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0 px-4 mb-8">
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
               <Calendar className="w-5 h-5 text-white" />
             </div>
-            <span className="ml-2 text-xl font-bold text-gray-900">SmartClass</span>
+            <span className={`ml-2 text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>&nbsp;&nbsp;SmartClass</span>
           </div>
 
           {/* User Info */}
@@ -81,8 +112,8 @@ const Navigation = ({ activeTab, setActiveTab }) => {
                 alt={user?.name}
               />
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-                <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+                <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{user?.name}</p>
+                <p className={`text-xs capitalize ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{user?.role}</p>
               </div>
             </div>
           </div>
@@ -108,7 +139,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
       </div>
 
       {/* Mobile Header */}
-      <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3">
+      <div className={`block lg:hidden border-b border-gray-200 px-4 py-3 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white'}`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
@@ -141,7 +172,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-50">
           <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setIsMobileMenuOpen(false)} />
-          <div className="fixed top-0 right-0 w-64 h-full bg-white shadow-lg">
+          <div className={`fixed top-0 right-0 w-64 h-full bg-white shadow-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
             <div className="flex flex-col h-full">
               {/* Mobile Menu Header */}
               <div className="flex items-center justify-between p-4 border-b border-gray-200">

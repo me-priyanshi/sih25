@@ -2,12 +2,18 @@ import React, { useState, useRef, useCallback } from 'react';
 import Webcam from 'react-webcam';
 import { Camera, CheckCircle, XCircle, RotateCcw } from 'lucide-react';
 
-const FaceRecognition = ({ onAttendanceMarked }) => {
+const FaceRecognition = ({ onAttendanceMarked, classId }) => {
   const [isCapturing, setIsCapturing] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [verificationResult, setVerificationResult] = useState(null);
   const [error, setError] = useState(null);
+  const [verificationAttempts, setVerificationAttempts] = useState(() => {
+    // Initialize attempts from localStorage for this class
+    const savedAttempts = localStorage.getItem(`verificationAttempts_${classId}`);
+    return savedAttempts ? parseInt(savedAttempts) : 0;
+  });
+  const MAX_VERIFICATION_ATTEMPTS = 2;
   const webcamRef = useRef(null);
 
   const videoConstraints = {
@@ -27,6 +33,20 @@ const FaceRecognition = ({ onAttendanceMarked }) => {
     setIsCapturing(false);
     setVerificationResult(null);
     setError(null);
+  };
+
+  const startOver = () => {
+    if (verificationAttempts >= MAX_VERIFICATION_ATTEMPTS) {
+      setError("Maximum verification attempts reached for this class. Please try again in the next class.");
+      return;
+    }
+    const newAttempts = verificationAttempts + 1;
+    setVerificationAttempts(newAttempts);
+    // Save attempts to localStorage
+    localStorage.setItem(`verificationAttempts_${classId}`, newAttempts.toString());
+    setCapturedImage(null);
+    setIsCapturing(false);
+    setVerificationResult(null);
   };
 
   const verifyFace = async () => {
@@ -83,13 +103,15 @@ const FaceRecognition = ({ onAttendanceMarked }) => {
       <div className="space-y-4">
         {!capturedImage ? (
           // Camera View
-          <div className="relative">
+          <div className="relative max-w-md mx-auto">
             <Webcam
               audio={false}
               ref={webcamRef}
               screenshotFormat="image/jpeg"
               videoConstraints={videoConstraints}
               className="w-full rounded-lg border border-gray-200"
+              height={360}
+              width={480}
             />
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-32 h-32 border-2 border-white border-dashed rounded-full opacity-50"></div>
@@ -97,11 +119,12 @@ const FaceRecognition = ({ onAttendanceMarked }) => {
           </div>
         ) : (
           // Captured Image View
-          <div className="relative">
+          <div className="relative max-w-md mx-auto">
             <img
               src={capturedImage}
               alt="Captured"
               className="w-full rounded-lg border border-gray-200"
+              style={{ height: '360px', width: '480px', objectFit: 'cover' }}
             />
             {verificationResult && (
               <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
@@ -152,27 +175,31 @@ const FaceRecognition = ({ onAttendanceMarked }) => {
                   )}
                 </button>
               )}
-              <button
-                onClick={retakePhoto}
-                className="flex-1 btn-secondary flex items-center justify-center"
-              >
-                <RotateCcw className="w-4 h-4 mr-2" />
-                Retake Photo
-              </button>
+              {!verificationResult ? (
+                // Show Retake Photo button before verification
+                <button
+                  onClick={retakePhoto}
+                  className="flex-1 btn-secondary flex items-center justify-center"
+                >
+                  <RotateCcw className="w-4 h-4 mr-2" />
+                  Retake Photo
+                </button>
+              ) : !verificationResult.success ? (
+                // Show Start Over button after failed verification
+                <button
+                  onClick={startOver}
+                  disabled={verificationAttempts >= MAX_VERIFICATION_ATTEMPTS}
+                  className="flex-1 btn-secondary flex items-center justify-center"
+                >
+                  <RotateCcw className="w-4 h-4 mr-2" />
+                  Start Over {verificationAttempts < MAX_VERIFICATION_ATTEMPTS ? 
+                    `(${MAX_VERIFICATION_ATTEMPTS - verificationAttempts} attempts left)` : 
+                    '(No attempts left)'}
+                </button>
+              ) : null}
             </>
           )}
         </div>
-
-        {/* Reset Button */}
-        {verificationResult && (
-          <button
-            onClick={resetComponent}
-            className="w-full btn-secondary flex items-center justify-center"
-          >
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Start Over
-          </button>
-        )}
 
         {/* Error Message */}
         {error && (

@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 
 const Settings = () => {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('profile');
   const [settings, setSettings] = useState({
@@ -37,16 +37,23 @@ const Settings = () => {
   };
 
   const handleSave = () => {
-    // In a real app, this would save to backend
+    // Update user context with new profile information
+    updateUser({
+      name: settings.profile.name,
+      email: settings.profile.email,
+      role: settings.profile.role
+    });
+    
+    // In a real app, this would also save to backend
     console.log('Settings saved:', settings);
     alert('Settings saved successfully!');
   };
 
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },
-    { id: 'notifications', label: 'Notifications', icon: Bell },
+    // { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'appearance', label: 'Appearance', icon: Palette },
-    { id: 'privacy', label: 'Privacy & Security', icon: Shield }
+    // { id: 'privacy', label: 'Privacy & Security', icon: Shield }
   ];
 
   return (
@@ -68,7 +75,7 @@ const Settings = () => {
         {/* Settings Navigation */}
         <div className="lg:col-span-1">
           <div className="card">
-            <nav className="space-y-1">
+            <nav className="space-y-1 rounded-lg">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
@@ -135,19 +142,19 @@ const Settings = () => {
                   </div>
                 </div>
 
-                <div>
+                {/* <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Security</h3>
                   <div className="space-y-4">
                     <button className="btn-secondary w-full md:w-auto">
                       Change Password
                     </button>
                   </div>
-                </div>
+                </div> */}
               </div>
             )}
 
             {/* Notification Settings */}
-            {activeTab === 'notifications' && (
+            {/* {activeTab === 'notifications' && (
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Notification Preferences</h3>
@@ -202,7 +209,7 @@ const Settings = () => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Appearance Settings */}
             {activeTab === 'appearance' && (
@@ -232,7 +239,7 @@ const Settings = () => {
             )}
 
             {/* Privacy Settings */}
-            {activeTab === 'privacy' && (
+            {/* {activeTab === 'privacy' && (
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Privacy & Security</h3>
@@ -299,7 +306,7 @@ const Settings = () => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Save Button */}
             <div className="mt-8 pt-6 border-t border-gray-200">

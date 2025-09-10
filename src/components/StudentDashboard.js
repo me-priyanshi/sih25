@@ -1,72 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, Calendar, CheckCircle, AlertCircle, BookOpen, Target } from 'lucide-react';
-import timetableData from '../data/timetable.json';
+import { useAuth } from '../contexts/AuthContext';
+// import timetableData from '../data/timetable.json';
 import tasksData from '../data/tasks.json';
 import attendanceData from '../data/attendance.json';
 
 const StudentDashboard = () => {
+  const { user } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [todaySchedule, setTodaySchedule] = useState([]);
   const [currentClass, setCurrentClass] = useState(null);
   const [nextClass, setNextClass] = useState(null);
   const [freePeriods, setFreePeriods] = useState([]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setCurrentTime(new Date());
+  //   }, 1000);
 
     // Get today's schedule
-    const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-    const schedule = timetableData[today] || [];
-    setTodaySchedule(schedule);
+    // const today = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+    // const schedule = timetableData[today] || [];
+    // setTodaySchedule(schedule);
 
     // Find current and next class
-    const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-    const currentTimeMinutes = currentHour * 60 + currentMinute;
+    // const now = new Date();
+    // const currentHour = now.getHours();
+    // const currentMinute = now.getMinutes();
+    // const currentTimeMinutes = currentHour * 60 + currentMinute;
 
-    let current = null;
-    let next = null;
-    const free = [];
+    // let current = null;
+    // let next = null;
+    // const free = [];
 
-    schedule.forEach((cls, index) => {
-      const [startTime, endTime] = cls.time.split(' - ');
-      const [startHour, startMin] = startTime.split(':').map(Number);
-      const [endHour, endMin] = endTime.split(':').map(Number);
+    // schedule.forEach((cls, index) => {
+    //   const [startTime, endTime] = cls.time.split(' - ');
+    //   const [startHour, startMin] = startTime.split(':').map(Number);
+    //   const [endHour, endMin] = endTime.split(':').map(Number);
       
-      const startMinutes = startHour * 60 + startMin;
-      const endMinutes = endHour * 60 + endMin;
+    //   const startMinutes = startHour * 60 + startMin;
+    //   const endMinutes = endHour * 60 + endMin;
 
-      if (currentTimeMinutes >= startMinutes && currentTimeMinutes <= endMinutes) {
-        current = cls;
-      } else if (currentTimeMinutes < startMinutes && !next) {
-        next = cls;
-      }
+    //   if (currentTimeMinutes >= startMinutes && currentTimeMinutes <= endMinutes) {
+    //     current = cls;
+    //   } else if (currentTimeMinutes < startMinutes && !next) {
+    //     next = cls;
+    //   }
 
-      // Check for free periods
-      if (index > 0) {
-        const prevClass = schedule[index - 1];
-        const [prevEndHour, prevEndMin] = prevClass.time.split(' - ')[1].split(':').map(Number);
-        const prevEndMinutes = prevEndHour * 60 + prevEndMin;
+    //   // Check for free periods
+    //   if (index > 0) {
+    //     const prevClass = schedule[index - 1];
+    //     const [prevEndHour, prevEndMin] = prevClass.time.split(' - ')[1].split(':').map(Number);
+    //     const prevEndMinutes = prevEndHour * 60 + prevEndMin;
         
-        if (startMinutes - prevEndMinutes > 15) {
-          free.push({
-            start: `${Math.floor(prevEndMinutes / 60)}:${(prevEndMinutes % 60).toString().padStart(2, '0')}`,
-            end: startTime,
-            duration: startMinutes - prevEndMinutes
-          });
-        }
-      }
-    });
+    //     if (startMinutes - prevEndMinutes > 15) {
+    //       free.push({
+    //         start: `${Math.floor(prevEndMinutes / 60)}:${(prevEndMinutes % 60).toString().padStart(2, '0')}`,
+    //         end: startTime,
+    //         duration: startMinutes - prevEndMinutes
+    //       });
+    //     }
+    //   }
+    // });
 
-    setCurrentClass(current);
-    setNextClass(next);
-    setFreePeriods(free);
+  //   setCurrentClass(current);
+  //   setNextClass(next);
+  //   setFreePeriods(free);
 
-    return () => clearInterval(timer);
-  }, []);
+  //   return () => clearInterval(timer);
+  // }, []);
 
   const getAttendanceStatus = () => {
     const todayAttendance = attendanceData.today.classes;
@@ -116,7 +118,7 @@ const StudentDashboard = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {getGreeting()}, Alice!
+              {getGreeting()}, {user?.name.split(' ')[0]}!
             </h1>
             <p className="text-gray-600 mt-1">
               {currentTime.toLocaleDateString('en-US', { 
@@ -213,7 +215,7 @@ const StudentDashboard = () => {
       </div>
 
       {/* Today's Schedule */}
-      <div className="card">
+      {/* <div className="card">
         <div className="flex items-center mb-6">
           <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
             <Calendar className="w-5 h-5 text-purple-600" />
@@ -260,7 +262,7 @@ const StudentDashboard = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Free Periods & Task Recommendations */}
       {freePeriods.length > 0 && (

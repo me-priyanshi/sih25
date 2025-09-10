@@ -1,14 +1,36 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Target, Clock, BookOpen, CheckCircle, AlertCircle, Plus, Filter } from 'lucide-react';
 import tasksData from '../data/tasks.json';
 
 const StudentTasks = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedPriority, setSelectedPriority] = useState('all');
-  const [completedTasks, setCompletedTasks] = useState(new Set());
+  // const [completedTasks, setCompletedTasks] = useState(new Set());
+  // const [academicTasks, setAcademicTasks] = useState([...tasksData.academic]);
+  // const [personalTasks, setPersonalTasks] = useState([...tasksData.personal]);
+  // Initialize states from localStorage or fallback to default values
+  const [academicTasks, setAcademicTasks] = useState(() => {
+    const saved = localStorage.getItem('academicTasks');
+    return saved ? JSON.parse(saved) : tasksData.academic;
+  });
 
-  const [academicTasks, setAcademicTasks] = useState([...tasksData.academic]);
-  const [personalTasks, setPersonalTasks] = useState([...tasksData.personal]);
+  const [personalTasks, setPersonalTasks] = useState(() => {
+    const saved = localStorage.getItem('personalTasks');
+    return saved ? JSON.parse(saved) : tasksData.personal;
+  });
+
+  const [completedTasks, setCompletedTasks] = useState(() => {
+    const saved = localStorage.getItem('completedTasks');
+    return new Set(saved ? JSON.parse(saved) : []);
+  });
+  
+  // Save to localStorage whenever tasks change
+  useEffect(() => {
+    localStorage.setItem('academicTasks', JSON.stringify(academicTasks));
+    localStorage.setItem('personalTasks', JSON.stringify(personalTasks));
+    localStorage.setItem('completedTasks', JSON.stringify([...completedTasks]));
+  }, [academicTasks, personalTasks, completedTasks]);
+
   const [showAddForm, setShowAddForm] = useState(false);
   const [newTask, setNewTask] = useState({
     title: '',
@@ -17,6 +39,8 @@ const StudentTasks = () => {
     estimatedTime: '',
     category: 'academic',
   });
+
+ 
 
   // ✅ allTasks defined before use
   const allTasks = [...academicTasks, ...personalTasks];
@@ -96,6 +120,17 @@ const StudentTasks = () => {
     });
   };
 
+  const handleDeleteTask = (taskId) => {
+    // Remove from completedTasks if it was completed
+    const newCompleted = new Set(completedTasks);
+    newCompleted.delete(taskId);
+    setCompletedTasks(newCompleted);
+
+    // Remove from academic or personal tasks
+    setAcademicTasks(academicTasks.filter(task => task.id !== taskId));
+    setPersonalTasks(personalTasks.filter(task => task.id !== taskId));
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -110,50 +145,61 @@ const StudentTasks = () => {
               <p className="text-gray-600">Manage your academic and personal tasks</p>
             </div>
           </div>
-          {/* Removed blue Add Task button */}
-          {showAddForm && (
-            <form className="mt-4 p-4 bg-gray-50 rounded-lg border" onSubmit={handleAddTask} style={{minWidth:'300px'}}>
-              <div className="mb-2">
-                <label className="block text-sm font-medium text-gray-700">Title</label>
-                <input type="text" className="input-field w-full" required value={newTask.title} onChange={e => setNewTask({...newTask, title: e.target.value})} />
-              </div>
-              <div className="mb-2">
-                <label className="block text-sm font-medium text-gray-700">Description</label>
-                <input type="text" className="input-field w-full" required value={newTask.description} onChange={e => setNewTask({...newTask, description: e.target.value})} />
-              </div>
-              <div className="mb-2">
-                <label className="block text-sm font-medium text-gray-700">Estimated Time</label>
-                <input type="text" className="input-field w-full" required value={newTask.estimatedTime} onChange={e => setNewTask({...newTask, estimatedTime: e.target.value})} />
-              </div>
-              <div className="mb-2">
-                <label className="block text-sm font-medium text-gray-700">Priority</label>
-                <select className="input-field w-full" value={newTask.priority} onChange={e => setNewTask({...newTask, priority: e.target.value})}>
-                  <option value="high">High</option>
-                  <option value="medium">Medium</option>
-                  <option value="low">Low</option>
-                </select>
-              </div>
-              <div className="mb-2">
-                <label className="block text-sm font-medium text-gray-700">Category</label>
-                <select className="input-field w-full" value={newTask.category} onChange={e => setNewTask({...newTask, category: e.target.value})}>
-                  <option value="academic">Academic</option>
-                  <option value="personal">Personal</option>
-                </select>
-              </div>
-              <div className="flex gap-2 mt-2">
-                <button type="submit" className="btn-primary">Add</button>
-                <button type="button" className="btn-secondary" onClick={() => setShowAddForm(false)}>Cancel</button>
-              </div>
-            </form>
-          )}
-          {!showAddForm && (
-            <button
+          <button
               className="ml-4 px-4 py-2 rounded-lg bg-indigo-600 text-white font-semibold shadow hover:bg-indigo-700 border border-indigo-600 flex items-center gap-2"
               onClick={() => setShowAddForm(true)}
             >
               <Plus className="w-4 h-4 mr-1 text-white" />
               New Task
             </button>
+
+          {/* Modal */}
+          {showAddForm && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-black rounded-lg p-6 w-full max-w-md">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold">Add New Task</h2>
+                  <button onClick={() => setShowAddForm(false)} className="text-gray-500 hover:text-gray-700">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <form onSubmit={handleAddTask}>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">Title</label>
+                    <input type="text" className="input-field w-full" required value={newTask.title} onChange={e => setNewTask({...newTask, title: e.target.value})} />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">Description</label>
+                    <input type="text" className="input-field w-full" required value={newTask.description} onChange={e => setNewTask({...newTask, description: e.target.value})} />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">Estimated Time</label>
+                    <input type="text" className="input-field w-full" required value={newTask.estimatedTime} onChange={e => setNewTask({...newTask, estimatedTime: e.target.value})} />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">Priority</label>
+                    <select className="input-field w-full" value={newTask.priority} onChange={e => setNewTask({...newTask, priority: e.target.value})}>
+                      <option value="high">High</option>
+                      <option value="medium">Medium</option>
+                      <option value="low">Low</option>
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700">Category</label>
+                    <select className="input-field w-full" value={newTask.category} onChange={e => setNewTask({...newTask, category: e.target.value})}>
+                      <option value="academic">Academic</option>
+                      <option value="personal">Personal</option>
+                    </select>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <button type="button" className="btn-secondary" onClick={() => setShowAddForm(false)}>Cancel</button>
+                    <button type="submit" className="btn-primary">Add Task</button>
+                  </div>
+                </form>
+              </div>
+            </div>
           )}
         </div>
       </div>
@@ -284,15 +330,28 @@ const StudentTasks = () => {
               <div className="flex-1">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h3
-                      className={`font-medium ${
-                        completedTasks.has(task.id)
-                          ? 'text-green-800 line-through'
-                          : 'text-gray-900'
-                      }`}
-                    >
-                      {task.title}
-                    </h3>
+                    <div className="flex justify-between">
+                      <h3
+                        className={`font-medium ${
+                          completedTasks.has(task.id)
+                            ? 'text-green-800 line-through'
+                            : 'text-gray-900'
+                        }`}
+                      >
+                        {task.title}
+                      </h3>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteTask(task.id);
+                        }}
+                        className="text-gray-400 hover:text-red-500 transition-colors"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                     <p
                       className={`text-sm mt-1 ${
                         completedTasks.has(task.id)

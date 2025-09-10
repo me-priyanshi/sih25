@@ -9,7 +9,7 @@ import FaceRecognition from './components/FaceRecognition';
 
 // Student Components
 import StudentDashboard from './components/StudentDashboard';
-import StudentTimetable from './components/StudentTimetable';
+// import StudentTimetable from './components/StudentTimetable';
 import StudentTasks from './components/StudentTasks';
 
 // Faculty Components
@@ -81,7 +81,7 @@ const AppContent = () => {
                             <FaceRecognition onAttendanceMarked={handleAttendanceMarked} />
                           </div>
                         )}
-                        {activeTab === 'timetable' && <StudentTimetable />}
+                        {/* {activeTab === 'timetable' && <StudentTimetable />} */}
                         {activeTab === 'tasks' && <StudentTasks />}
                         {activeTab === 'settings' && <Settings />}
                       </>
