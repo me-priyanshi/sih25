@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Users, CheckCircle, XCircle, Clock, Calendar, Download, Filter } from 'lucide-react';
 import attendanceData from '../data/attendance.json';
 import studentsData from '../data/students.json';
+import { useTheme } from '../contexts/ThemeContext';
 
 const FacultyAttendance = () => {
+  const { theme } = useTheme();
   const [selectedClass, setSelectedClass] = useState(0);
   const [selectedDate, setSelectedDate] = useState('today');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -53,15 +55,15 @@ const FacultyAttendance = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="card">
+      <div className={`card ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+            <div className={`w-10 h-10 ${theme === 'dark' ? 'bg-green-900' : 'bg-green-100'} rounded-lg flex items-center justify-center`}>
               <Users className="w-5 h-5 text-green-600" />
             </div>
             <div className="ml-3">
-              <h1 className="text-2xl font-bold text-gray-900">Class Attendance</h1>
-              <p className="text-gray-600">Monitor and manage student attendance in real-time</p>
+              <h1 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Class Attendance</h1>
+              <p className={theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}>Monitor and manage student attendance in real-time</p>
             </div>
           </div>
           <button
@@ -76,10 +78,10 @@ const FacultyAttendance = () => {
       </div>
 
       {/* Class Selector */}
-      <div className="card">
+      <div className={`card ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="flex items-center mb-4">
-          <Calendar className="w-5 h-5 text-gray-600 mr-2" />
-          <h3 className="text-lg font-semibold text-gray-900">Select Class</h3>
+          <Calendar className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} mr-2`} />
+          <h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Select Class</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {todayClasses.map((cls, index) => (
@@ -88,16 +90,20 @@ const FacultyAttendance = () => {
               onClick={() => setSelectedClass(index)}
               className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
                 selectedClass === index
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-gray-200 bg-white hover:border-gray-300'
+                  ? theme === 'dark' 
+                    ? 'border-primary-500 bg-primary-900'
+                    : 'border-primary-500 bg-primary-50'
+                  : theme === 'dark'
+                    ? 'border-gray-700 bg-gray-900 hover:border-gray-600'
+                    : 'border-gray-200 bg-white hover:border-gray-300'
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <h4 className="font-medium text-gray-900">{cls.subject}</h4>
-                <span className="text-sm text-gray-500">{cls.time}</span>
+                <h4 className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{cls.subject}</h4>
+                <span className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{cls.time}</span>
               </div>
-              <p className="text-sm text-gray-600">{cls.teacher}</p>
-              <p className="text-sm text-gray-500">{cls.room}</p>
+              <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{cls.teacher}</p>
+              <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{cls.room}</p>
               <div className="mt-2 flex items-center justify-between">
                 <span className="text-sm font-medium text-primary-600">
                   {cls.students.filter(s => s.present).length}/{cls.students.length} present
@@ -119,54 +125,54 @@ const FacultyAttendance = () => {
       {/* Class Details */}
       {currentClass && (
         <>
-          <div className="card">
+          <div className={`card ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-xl font-semibold text-gray-900">{currentClass.subject}</h3>
-                <p className="text-gray-600">{currentClass.teacher} • {currentClass.time} • {currentClass.room}</p>
+                <h3 className={`text-xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{currentClass.subject}</h3>
+                <p className={theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}>{currentClass.teacher} • {currentClass.time} • {currentClass.room}</p>
               </div>
               <div className="text-right">
                 <div className="text-2xl font-bold text-primary-600">
                   {currentClass.students.filter(s => s.present).length}/{currentClass.students.length}
                 </div>
-                <p className="text-sm text-gray-600">Students Present</p>
+                <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Students Present</p>
               </div>
             </div>
 
             {/* Attendance Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <div className={`p-4 rounded-lg border ${theme === 'dark' ? 'bg-green-900 border-green-700' : 'bg-green-50 border-green-200'}`}>
                 <div className="flex items-center">
                   <CheckCircle className="w-8 h-8 text-green-600 mr-3" />
                   <div>
-                    <p className="text-2xl font-bold text-green-600">
+                    <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>
                       {currentClass.students.filter(s => s.present).length}
                     </p>
-                    <p className="text-sm text-green-700">Present</p>
+                    <p className={`text-sm ${theme === 'dark' ? 'text-green-300' : 'text-green-700'}`}>Present</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+              <div className={`p-4 rounded-lg border ${theme === 'dark' ? 'bg-red-900 border-red-700' : 'bg-red-50 border-red-200'}`}>
                 <div className="flex items-center">
                   <XCircle className="w-8 h-8 text-red-600 mr-3" />
                   <div>
-                    <p className="text-2xl font-bold text-red-600">
+                    <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-red-400' : 'text-red-600'}`}>
                       {currentClass.students.filter(s => !s.present).length}
                     </p>
-                    <p className="text-sm text-red-700">Absent</p>
+                    <p className={`text-sm ${theme === 'dark' ? 'text-red-300' : 'text-red-700'}`}>Absent</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <div className={`p-4 rounded-lg border ${theme === 'dark' ? 'bg-blue-900 border-blue-700' : 'bg-blue-50 border-blue-200'}`}>
                 <div className="flex items-center">
                   <Clock className="w-8 h-8 text-blue-600 mr-3" />
                   <div>
-                    <p className="text-2xl font-bold text-blue-600">
+                    <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`}>
                       {Math.round((currentClass.students.filter(s => s.present).length / currentClass.students.length) * 100)}%
                     </p>
-                    <p className="text-sm text-blue-700">Attendance Rate</p>
+                    <p className={`text-sm ${theme === 'dark' ? 'text-blue-300' : 'text-blue-700'}`}>Attendance Rate</p>
                   </div>
                 </div>
               </div>
@@ -174,19 +180,23 @@ const FacultyAttendance = () => {
           </div>
 
           {/* Student List */}
-          <div className="card">
+          <div className={`card ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
-                <Filter className="w-5 h-5 text-gray-600 mr-2" />
-                <h3 className="text-lg font-semibold text-gray-900">Student List</h3>
+                <Filter className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} mr-2`} />
+                <h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Student List</h3>
               </div>
               <div className="flex space-x-2">
                 <button
                   onClick={() => setFilterStatus('all')}
                   className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
                     filterStatus === 'all'
-                      ? 'bg-primary-100 text-primary-800 border-2 border-primary-500'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? theme === 'dark'
+                        ? 'bg-primary-900 text-primary-100 border-2 border-primary-500'
+                        : 'bg-primary-100 text-primary-800 border-2 border-primary-500'
+                      : theme === 'dark'
+                        ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
                   All ({currentClass.students.length})
@@ -195,8 +205,12 @@ const FacultyAttendance = () => {
                   onClick={() => setFilterStatus('present')}
                   className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
                     filterStatus === 'present'
-                      ? 'bg-green-100 text-green-800 border-2 border-green-500'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? theme === 'dark'
+                        ? 'bg-green-900 text-green-100 border-2 border-green-500'
+                        : 'bg-green-100 text-green-800 border-2 border-green-500'
+                      : theme === 'dark'
+                        ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
                   Present ({currentClass.students.filter(s => s.present).length})
@@ -205,8 +219,12 @@ const FacultyAttendance = () => {
                   onClick={() => setFilterStatus('absent')}
                   className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 ${
                     filterStatus === 'absent'
-                      ? 'bg-red-100 text-red-800 border-2 border-red-500'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? theme === 'dark'
+                        ? 'bg-red-900 text-red-100 border-2 border-red-500'
+                        : 'bg-red-100 text-red-800 border-2 border-red-500'
+                      : theme === 'dark'
+                        ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
                   Absent ({currentClass.students.filter(s => !s.present).length})

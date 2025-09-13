@@ -216,13 +216,7 @@ const FacultyStudents = () => {
                   Attendance
                 </th>
                 <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-white-500' : 'text-gray-500'}`}>
-                  Classes
-                </th>
-                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-white-500' : 'text-gray-500'}`}>
                   Subjects
-                </th>
-                <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${theme === 'dark' ? 'text-white-500' : 'text-gray-500'}`}>  
-                  Actions
                 </th>
               </tr>
             </thead>
@@ -247,12 +241,6 @@ const FacultyStudents = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">{student.email}</div>
-                    <div className="flex items-center mt-1">
-                      <Mail className="w-3 h-3 text-gray-400 mr-1" />
-                      <button className="text-xs text-primary-600 hover:text-primary-800">
-                        Send Email
-                      </button>
-                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -265,45 +253,13 @@ const FacultyStudents = () => {
                       {student.attendance.present} present, {student.attendance.absent} absent
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <div className="flex items-center">
-                      <div className="w-full bg-gray-200 rounded-full h-2 mr-2">
-                        <div 
-                          className={`h-2 rounded-full ${
-                            student.attendance.percentage >= 95 ? 'bg-green-500' :
-                            student.attendance.percentage >= 85 ? 'bg-blue-500' :
-                            student.attendance.percentage >= 75 ? 'bg-yellow-500' : 'bg-red-500'
-                          }`}
-                          style={{ width: `${student.attendance.percentage}%` }}
-                        ></div>
-                      </div>
-                      <span className="text-xs text-gray-500">
-                        {student.attendance.present}/{student.attendance.totalClasses}
-                      </span>
-                    </div>
-                  </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-wrap gap-1">
-                      {student.subjects.slice(0, 2).map((subject, index) => (
+                      {student.subjects.map((subject, index) => (
                         <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                           {subject}
                         </span>
                       ))}
-                      {student.subjects.length > 2 && (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                          +{student.subjects.length - 2} more
-                        </span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2">
-                      <button className="text-primary-600 hover:text-primary-900">
-                        View Details
-                      </button>
-                      <button className="text-gray-600 hover:text-gray-900">
-                        <Mail className="w-4 h-4" />
-                      </button>
                     </div>
                   </td>
                 </tr>

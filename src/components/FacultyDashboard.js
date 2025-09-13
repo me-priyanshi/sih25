@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import FaceRecognition from './FaceRecognition';
+import QRCodeAttendance from './QRCodeAttendance';
 import { Users, CheckCircle, XCircle, Clock, TrendingUp, Download } from 'lucide-react';
 import studentsData from '../data/students.json';
 import attendanceData from '../data/attendance.json';
+import { useTheme } from '../contexts/ThemeContext';
 
 const FacultyDashboard = () => {
-  const [showFaceModal, setShowFaceModal] = useState(false);
+  const { theme } = useTheme();
+  const [showQRModal, setShowQRModal] = useState(false);
   const [attendanceSuccess, setAttendanceSuccess] = useState(false);
 
   const handleAttendanceMarked = () => {
     setAttendanceSuccess(true);
-    setShowFaceModal(false);
+    setShowQRModal(false);
     setTimeout(() => setAttendanceSuccess(false), 3000);
   };
 
@@ -93,13 +95,13 @@ const FacultyDashboard = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
-      <div className="card">
+      <div className={`card ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
               {getGreeting()}, Dr. Smith!
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className={`mt-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
               {currentTime.toLocaleDateString('en-US', { 
                 weekday: 'long', 
                 year: 'numeric', 
@@ -112,100 +114,93 @@ const FacultyDashboard = () => {
             <div className="text-2xl font-bold text-primary-600">
               {formatTime(currentTime)}
             </div>
-            <div className="text-sm text-gray-500">Current Time</div>
+            <div className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Current Time</div>
           </div>
         </div>
       </div>
 
       {/* Attendance Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="card flex items-center">
-          <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+        <div className={`card flex items-center ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className={`w-12 h-12 ${theme === 'dark' ? 'bg-green-900' : 'bg-green-100'} rounded-lg flex items-center justify-center`}>
             <CheckCircle className="w-6 h-6 text-green-600" />
           </div>
           <div className="ml-4">
-            <p className="text-2xl font-bold text-gray-900">{attendanceStats.presentToday}</p>
-            <p className="text-sm text-gray-600">Present Today</p>
+            <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{attendanceStats.presentToday}</p>
+            <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Present Today</p>
           </div>
         </div>
 
-        <div className="card flex items-center">
-          <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+        <div className={`card flex items-center ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className={`w-12 h-12 ${theme === 'dark' ? 'bg-red-900' : 'bg-red-100'} rounded-lg flex items-center justify-center`}>
             <XCircle className="w-6 h-6 text-red-600" />
           </div>
           <div className="ml-4">
-            <p className="text-2xl font-bold text-gray-900">{attendanceStats.absentToday}</p>
-            <p className="text-sm text-gray-600">Absent Today</p>
+            <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{attendanceStats.absentToday}</p>
+            <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Absent Today</p>
           </div>
         </div>
 
-        <div className="card flex items-center">
-          <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+        <div className={`card flex items-center ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className={`w-12 h-12 ${theme === 'dark' ? 'bg-purple-900' : 'bg-purple-100'} rounded-lg flex items-center justify-center`}>
             <TrendingUp className="w-6 h-6 text-purple-600" />
           </div>
           <div className="ml-4">
-            <p className="text-2xl font-bold text-gray-900">{attendanceStats.averageAttendance}%</p>
-            <p className="text-sm text-gray-600">Avg Attendance</p>
+            <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{attendanceStats.averageAttendance}%</p>
+            <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Avg Attendance</p>
           </div>
         </div>
       </div>
 
       {/* Today's Classes */}
-      <div className="card">
+      <div className={`card ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
-            <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+            <div className={`w-10 h-10 ${theme === 'dark' ? 'bg-indigo-900' : 'bg-indigo-100'} rounded-lg flex items-center justify-center`}>
               <Clock className="w-5 h-5 text-indigo-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 ml-3">Today's Classes</h3>
+            <h3 className={`text-lg font-semibold ml-3 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Today's Classes</h3>
           </div>
-          <button
-            onClick={exportAttendanceCSV}
-            className="btn-primary flex items-center"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            Export CSV
-          </button>
         </div>
 
         <div className="space-y-4">
           {todayAttendance.map((cls) => (
-            <div key={cls.id} className="p-6 rounded-xl border border-gray-200 bg-white">
+            <div key={cls.id} className={`p-6 rounded-xl border ${theme === 'dark' ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-white'}`}>
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h4 className="text-lg font-semibold text-gray-900">{cls.subject}</h4>
-                  <p className="text-sm text-gray-600">{cls.teacher}</p>
-                  <p className="text-sm text-gray-500">{cls.time} • {cls.room}</p>
+                  <h4 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{cls.subject}</h4>
+                  <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{cls.teacher}</p>
+                  <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{cls.time} • {cls.room}</p>
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-primary-600">
                     {cls.students.filter(s => s.present).length}/{cls.students.length}
                   </div>
-                  <p className="text-sm text-gray-600">Present</p>
+                  <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Present</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h5 className="font-medium text-gray-900 mb-2">Present Students</h5>
+                  <h5 className={`font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Present Students</h5>
                   <div className="space-y-1">
                     {cls.students.filter(s => s.present).map((student) => (
                       <div key={student.id} className="flex items-center text-sm">
                         <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                        <span className="text-gray-700">{student.name}</span>
-                        <span className="text-gray-500 ml-auto">{student.time}</span>
+                        <span className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>{student.name}</span>
+                        <span className={`ml-auto ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{student.time}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <h5 className="font-medium text-gray-900 mb-2">Absent Students</h5>
+                  <h5 className={`font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Absent Students</h5>
                   <div className="space-y-1">
                     {cls.students.filter(s => !s.present).map((student) => (
                       <div key={student.id} className="flex items-center text-sm">
                         <XCircle className="w-4 h-4 text-red-500 mr-2" />
-                        <span className="text-gray-700">{student.name}</span>
+                        <span className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>{student.name}</span>
                       </div>
                     ))}
                   </div>

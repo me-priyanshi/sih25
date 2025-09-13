@@ -46,7 +46,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
 
   const studentNavItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
-    { id: 'attendance', label: 'Attendance', icon: Camera },
+    { id: 'attendance', label: 'QR Attendance', icon: Camera },
     // { id: 'timetable', label: 'Timetable', icon: Calendar },
     { id: 'tasks', label: 'Tasks', icon: BarChart3 },
     { id: 'settings', label: 'Settings', icon: Settings }

@@ -5,7 +5,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Navigation from './components/Navigation';
-import FaceRecognition from './components/FaceRecognition';
+import QRCodeAttendance from './components/QRCodeAttendance';
 
 // Student Components
 import StudentDashboard from './components/StudentDashboard';
@@ -78,7 +78,7 @@ const AppContent = () => {
                                 </div>
                               </div>
                             )}
-                            <FaceRecognition onAttendanceMarked={handleAttendanceMarked} />
+                            <QRCodeAttendance onAttendanceMarked={handleAttendanceMarked} />
                           </div>
                         )}
                         {/* {activeTab === 'timetable' && <StudentTimetable />} */}
