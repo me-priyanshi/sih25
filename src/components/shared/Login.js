@@ -72,7 +72,7 @@ const Login = ({ onSignupClick }) => {
               <GraduationCap className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              Smart Classroom
+              ClassCue
             </h1>
             <p className="text-gray-600">
               AI-powered Attendance & Productivity System
