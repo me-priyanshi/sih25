@@ -177,7 +177,6 @@ const Settings = () => {
                         <input
                           type="email"
                           value={settings.profile.email}
-                          // onChange={(e) => handleSettingChange('profile', 'email', e.target.value)}
                           disabled
                           className="input-field bg-gray-100"
                         />
@@ -195,6 +194,40 @@ const Settings = () => {
                         />
                       </div>
                     )}
+                    {user?.role === 'student' ? (
+                      <span>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Interests
+                          </label>
+                          <textarea
+                            value={settings.profile.interests}
+                            onChange={(e) => handleSettingChange('profile', 'interests', e.target.value)}
+                            className="input-field bg-gray-100"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Skills
+                          </label>
+                          <textarea
+                            value={settings.profile.skills}
+                            onChange={(e) => handleSettingChange('profile', 'skills', e.target.value)}
+                            className="input-field bg-gray-100"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Goals
+                          </label>
+                          <textarea
+                            value={settings.profile.goals}
+                            onChange={(e) => handleSettingChange('profile', 'goals', e.target.value)}
+                            className="input-field bg-gray-100"
+                          />
+                        </div>
+                      </span>
+                    ) : (<span></span>)}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Role
@@ -206,38 +239,7 @@ const Settings = () => {
                         className="input-field bg-gray-100"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Interests
-                      </label>
-                      <textarea
-                        value={settings.profile.interests}
-                        onChange={(e) => handleSettingChange('profile', 'interests', e.target.value)}
-                        className="input-field bg-gray-100"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Skills
-                      </label>
-                      <textarea
-                        value={settings.profile.skills}
-                        onChange={(e) => handleSettingChange('profile', 'skills', e.target.value)}
-                        className="input-field bg-gray-100"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Goals
-                      </label>
-                      <textarea
-                        value={settings.profile.goals}
-                        onChange={(e) => handleSettingChange('profile', 'goals', e.target.value)}
-                        className="input-field bg-gray-100"
-                      />
-                    </div>
                   </div>
-                  
                 </div>
 
                 {/* <div>
