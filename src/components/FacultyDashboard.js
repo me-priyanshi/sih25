@@ -4,8 +4,10 @@ import { Users, CheckCircle, XCircle, Clock, TrendingUp, Download } from 'lucide
 import studentsData from '../data/students.json';
 import attendanceData from '../data/attendance.json';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const FacultyDashboard = () => {
+  const { user } = useAuth();
   const { theme } = useTheme();
   const [showQRModal, setShowQRModal] = useState(false);
   const [attendanceSuccess, setAttendanceSuccess] = useState(false);
@@ -99,7 +101,7 @@ const FacultyDashboard = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-              {getGreeting()}, Dr. Smith!
+              {getGreeting()}, {user?.name.split(' ')[0]}!
             </h1>
             <p className={`mt-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
               {currentTime.toLocaleDateString('en-US', { 

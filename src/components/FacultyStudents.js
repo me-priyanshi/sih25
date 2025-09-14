@@ -168,7 +168,7 @@ const FacultyStudents = () => {
           <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Attendance</label>
           <div className="flex flex-wrap gap-2">
             {[
-              { value: 'all', label: 'All Students', color: 'bg-gray-100 text-gray-800' },
+              { value: 'all', label: 'All Students', color: 'bg-gray-100' },
               { value: 'excellent', label: 'Excellent (≥95%)', color: 'bg-green-100 text-green-800' },
               { value: 'good', label: 'Good (85-94%)', color: 'bg-blue-100 text-blue-800' },
               { value: 'average', label: 'Average (75-84%)', color: 'bg-yellow-100 text-yellow-800' },
@@ -228,7 +228,7 @@ const FacultyStudents = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${theme === 'dark' ? 'bg-gray-200 ' : 'bg-primary-100'}`}>
                         <span className="text-sm font-medium text-primary-600">
                           {student.name.split(' ').map(n => n[0]).join('')}
                         </span>
@@ -249,14 +249,14 @@ const FacultyStudents = () => {
                         <span className="ml-1">{student.attendance.percentage}%</span>
                       </span>
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">
+                    <div className="text-xs mt-1">
                       {student.attendance.present} present, {student.attendance.absent} absent
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-wrap gap-1">
                       {student.subjects.map((subject, index) => (
-                        <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                        <span key={index} className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${theme === 'dark' ? 'text-white bg-gray-50' : 'bg-gray-200 text-gray-800' }`}>
                           {subject}
                         </span>
                       ))}

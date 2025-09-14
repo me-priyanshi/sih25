@@ -105,7 +105,7 @@ const FacultyAttendance = () => {
               <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{cls.teacher}</p>
               <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{cls.room}</p>
               <div className="mt-2 flex items-center justify-between">
-                <span className="text-sm font-medium text-primary-600">
+                <span className="text-sm font-medium text-primary-200">
                   {cls.students.filter(s => s.present).length}/{cls.students.length} present
                 </span>
                 <div className="w-16 bg-gray-200 rounded-full h-2">
@@ -240,8 +240,12 @@ const FacultyAttendance = () => {
                     key={student.id}
                     className={`p-4 rounded-lg border-2 transition-all duration-200 ${
                       student.present
-                        ? 'border-green-200 bg-green-50'
-                        : 'border-red-200 bg-red-50'
+                        ? theme === 'dark' 
+                          ? 'border-green-600 bg-green-900' 
+                          : 'border-green-200 bg-green-50'
+                        : theme === 'dark'
+                          ? 'border-red-600 bg-red-900'
+                          : 'border-red-200 bg-red-50'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -256,17 +260,17 @@ const FacultyAttendance = () => {
                           )}
                         </div>
                         <div>
-                          <h4 className="font-medium text-gray-900">{student.name}</h4>
-                          <p className="text-sm text-gray-600">
+                          <h4 className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{student.name}</h4>
+                          <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                             {studentInfo?.studentId || `ID: ${student.id}`}
                           </p>
                           {studentInfo?.email && (
-                            <p className="text-sm text-gray-500">{studentInfo.email}</p>
+                            <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{studentInfo.email}</p>
                           )}
-                        </div>
+                      </div>
                       </div>
                       <div className="text-right">
-                        <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        <div className={`px-4 py-1 rounded-full text-sm font-medium flex items-center justify-center ${
                           student.present
                             ? 'bg-green-100 text-green-800'
                             : 'bg-red-100 text-red-800'
@@ -274,7 +278,7 @@ const FacultyAttendance = () => {
                           {student.present ? 'Present' : 'Absent'}
                         </div>
                         {student.time && (
-                          <p className="text-sm text-gray-500 mt-1">
+                          <p className={`text-sm mt-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                             Arrived: {student.time}
                           </p>
                         )}
