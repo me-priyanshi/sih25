@@ -100,7 +100,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
               <Calendar className="w-5 h-5 text-white" />
             </div>
-            <span className={`ml-2 text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>&nbsp;&nbsp;SmartClass</span>
+            <span className={`ml-2 text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>&nbsp;&nbsp;ClassCue</span>
           </div>
 
           {/* User Info */}
@@ -139,7 +139,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
               <Calendar className="w-5 h-5 text-white" />
             </div>
-            <span className={`ml-2 text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>SmartClass</span>
+            <span className={`ml-2 text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>ClassCue</span>
           </div>
           
           <div className="flex items-center space-x-3">
@@ -172,7 +172,7 @@ const Navigation = ({ activeTab, setActiveTab }) => {
                   <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
                     <Calendar className="w-5 h-5 text-white" />
                   </div>
-                  <span className={`ml-2 text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>SmartClass</span>
+                  <span className={`ml-2 text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>ClassCue</span>
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
