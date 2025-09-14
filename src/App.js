@@ -2,23 +2,23 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import Navigation from './components/Navigation';
-import QRCodeAttendance from './components/QRCodeAttendance';
+import Login from './components/shared/Login';
+import Signup from './components/shared/Signup';
+import Navigation from './components/shared/Navigation';
+import QRCodeAttendance from './components/shared/QRCodeAttendance';
 
 // Student Components
-import StudentDashboard from './components/StudentDashboard';
-// import StudentTimetable from './components/StudentTimetable';
-import StudentTasks from './components/StudentTasks';
+import StudentDashboard from './components/student/StudentDashboard';
+// import StudentTimetable from './components/student/StudentTimetable';
+import StudentTasks from './components/student/StudentTasks';
 
 // Faculty Components
-import FacultyDashboard from './components/FacultyDashboard';
-import FacultyStudents from './components/FacultyStudents';
-import FacultyAttendance from './components/FacultyAttendance';
+import FacultyDashboard from './components/faculty/FacultyDashboard';
+import FacultyStudents from './components/faculty/FacultyStudents';
+import FacultyAttendance from './components/faculty/FacultyAttendance';
 
 // Shared Components
-import Settings from './components/Settings';
+import Settings from './components/shared/Settings';
 
 const AppContent = () => {
   const { user, loading } = useAuth();
