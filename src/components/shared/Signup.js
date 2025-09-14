@@ -100,7 +100,7 @@ const Signup = ({ onLoginClick }) => {
               Sign Up
             </h1>
             <p className="text-gray-600">
-              Create your Smart Classroom account
+              Create your ClassCue account
             </p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-6">
